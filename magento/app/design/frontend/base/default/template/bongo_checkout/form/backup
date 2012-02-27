@@ -1,0 +1,176 @@
+
+<input type="hidden" id="txtBongousStatus" name="txtBongousStatus" value="<? echo BONGOUS_STATUS; ?>" /> 
+<input type="hidden" id="txtBongousCountry" name="txtBongousCountry" value="<? echo BONGOUS_SUPPORTED_COUNTRIES; ?>" /> 
+		
+<script>
+
+//debugger;
+
+var Review = Class.create();
+Review.prototype = {
+    initialize: function(saveUrl, successUrl, agreementsForm){
+        this.saveUrl = saveUrl;
+        this.successUrl = successUrl;
+        this.agreementsForm = agreementsForm;
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+    },
+
+    save: function(){
+        if (checkout.loadWaiting!=false) return;
+        checkout.setLoadWaiting('review');
+        var params = Form.serialize(payment.form);
+        if (this.agreementsForm) {
+            params += '&'+Form.serialize(this.agreementsForm);
+        }
+        params.save = true;
+        var request = new Ajax.Request(
+            this.saveUrl,
+            {
+                method:'post',
+                parameters:params,
+                onComplete: this.onComplete,
+                onSuccess: this.onSave,
+                onFailure: checkout.ajaxFailure.bind(checkout)
+            }
+        );
+    },
+
+    resetLoadWaiting: function(transport){
+        checkout.setLoadWaiting(false, this.isSuccess);
+    },
+
+    nextStep: function(transport){
+		//debugger;
+        if (transport && transport.responseText) {
+            try{
+                response = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                response = {};
+            }
+            if (response.redirect) {
+                location.href = response.redirect;
+                return;
+            }
+            if (response.success) {
+				//alert("is_Bongous" +is_Bongous);
+				//debugger;
+				//alert("phone revw");
+				/*bongous:start*/
+               		this.isSuccess = true;
+					//check if status is active & selected country is part of supported countries
+					//if($("txtBongousStatus").value=="1" && $("txtBongousCountry").value.search($("billing:country_id").value) > -1)
+					if ( document.forms["frmBongous"] )
+					{
+						$("frmBongous").submit();
+					}
+					else 
+						window.location=this.successUrl; //if country is not supported show success page
+				/*bongous:end*/	
+            }
+            else{
+                var msg = response.error_messages;
+                if (typeof(msg)=='object') {
+                    msg = msg.join("\n");
+                }
+                if (msg) {
+                    alert(msg);
+                }
+            }
+
+            if (response.update_section) {
+                $('checkout-'+response.update_section.name+'-load').update(response.update_section.html);
+            }
+
+            if (response.goto_section) {
+                checkout.gotoSection(response.goto_section);
+                checkout.reloadProgressBlock();
+            }
+        }
+    },
+
+    isSuccess: false
+}
+
+
+	if($("txtBongousStatus").value=="1" && $("txtBongousCountry").value.search($("billing:country_id").value) > -1)
+	{	
+		//debugger;	
+		//get all child elements of dt & dd
+		var x = $("checkout-payment-method-load").childElements('dt')[0].children;
+		
+		//loop through all child elements
+		//debugger;
+		if(x.length > 0)
+		{
+				for(i = 0 ; i <= x.length; i++)
+				{   
+						if(x[i] != undefined)
+						{
+								if(x[i].children[0] != undefined)
+								{
+										//get id of 1st child i.e. radio button
+										if(x[i].children[0].id != undefined && x[i].children[0].id != "")
+										{
+											var childId=x[i].children[0].id;
+										
+											//check if id is not "p_method_phone"
+											if( childId != "p_method_bongo")
+											{
+												//alert( "dasd" +x[i] );
+												//document.getElementById(childId).style.visibility='hidden';
+												//hide parent node of radio button
+												$(childId).parentNode.style.display='none';
+											}
+											
+											//check if id is "p_method_phone"
+											if( childId == "p_method_bongo")
+											{   //debugger;
+												$(childId).checked=true; //check it by default
+											}
+											
+										}
+								}
+						}
+					
+				}
+		}
+			
+	}
+	else
+	{
+		var x = $("checkout-payment-method-load").childElements('dt')[0].children;
+		if(x.length > 0)
+		{
+				for(i = 0 ; i <= x.length; i++)
+				{   
+						if(x[i] != undefined)
+						{
+								if(x[i].children[0] != undefined)
+								{
+										//get id of 1st child i.e. radio button
+										if(x[i].children[0].id != undefined && x[i].children[0].id != "")
+										{
+											var childId=x[i].children[0].id;
+										
+											//check if id is "p_method_phone"
+											if( childId == "p_method_bongo")
+											{
+												//hide parent node of radio button
+												$(childId).parentNode.style.display='none';
+											}
+										}
+								}
+						}
+					
+				}
+		}
+		
+	}
+
+</script>
+
+	
+
+	

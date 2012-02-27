@@ -1,0 +1,198 @@
+<?php 
+$excluded_countries = $this->getMethod()->getExcludedCountries();
+$cust_ship_country = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress()->getCountry();
+$cust_bill_country = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress()->getCountry();
+?>
+
+<script type="text/javascript">
+//alert("<?php echo $excluded_countries; ?>");
+//alert("<?php echo $cust_country; ?>");
+
+function isBongoCheckoutActive() {
+	var excluded_countries_str = '<?php echo $excluded_countries; ?>';
+	var excluded_countries = excluded_countries_str.split(',');
+	
+	var cust_ship_country = '<?php echo Mage::getModel('checkout/cart')->getQuote()->getShippingAddress()->getCountry(); ?>';
+	var cust_bill_country = '<?php echo Mage::getModel('checkout/cart')->getQuote()->getBillingAddress()->getCountry(); ?>';
+
+	if (cust_ship_country && cust_ship_country != 'US') {
+		for (var i=0; i < excluded_countries.length; i++) {
+			if (cust_ship_country == excluded_countries[i]) { return false; }
+			//if (cust_bill_country == excluded_countries[i]) { return false; }
+		}
+	} else {
+		return false;
+	}
+	
+	return true;
+}
+
+
+var Review = Class.create();
+
+Review.prototype = {
+    initialize: function(saveUrl, successUrl, agreementsForm){
+        this.saveUrl = saveUrl;
+        this.successUrl = successUrl;
+        this.agreementsForm = agreementsForm;
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+		if ( $$('input#p_method_bongo')[0].checked ) {
+			$$('button.btn-checkout span span')[0].update('Continue to Payment');
+			$$('button.btn-checkout')[0].writeAttribute('title','Continue to Payment');
+		}
+    },
+
+    save: function(){
+        if (checkout.loadWaiting!=false) return;
+        checkout.setLoadWaiting('review');
+        var params = Form.serialize(payment.form);
+        if (this.agreementsForm) {
+            params += '&'+Form.serialize(this.agreementsForm);
+        }
+        params.save = true;
+        var request = new Ajax.Request(
+            this.saveUrl,
+            {
+                method:'post',
+                parameters:params,
+                onComplete: this.onComplete,
+                onSuccess: this.onSave,
+                onFailure: checkout.ajaxFailure.bind(checkout)
+            }
+        );
+    },
+
+    resetLoadWaiting: function(transport){
+        checkout.setLoadWaiting(false, this.isSuccess);
+    },
+
+    nextStep: function(transport){
+	
+		//debugger;
+        if (transport && transport.responseText) {
+            try{
+                response = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                response = {};
+            }
+            if (response.redirect) {
+                location.href = response.redirect;
+                return;
+            }
+            if (response.success) {
+				/*bongous:start*/
+               		this.isSuccess = true;
+					if ( document.forms["frmBongo"] )
+						$("frmBongo").submit();
+					else 
+						window.location = this.successUrl;
+				/*bongous:end*/	
+            } else {
+                var msg = response.error_messages;
+                if (typeof(msg)=='object') {
+                    msg = msg.join("\n");
+                }
+                if (msg) {
+                    alert(msg);
+                }
+            }
+
+            if (response.update_section) {
+                $('checkout-'+response.update_section.name+'-load').update(response.update_section.html);
+				
+            }
+
+            if (response.goto_section) {
+                checkout.gotoSection(response.goto_section);
+                checkout.reloadProgressBlock();
+            }
+        }
+    },
+
+    isSuccess: false
+}
+
+
+
+if( isBongoCheckoutActive() )
+{	
+	//debugger;	
+	//get all child elements of dt & dd
+	var x = $("checkout-payment-method-load").childElements('dt')[0].children;
+	
+	//loop through all child elements
+	//debugger;
+	if(x.length > 0)
+	{
+			for(i = 0 ; i <= x.length; i++)
+			{   
+					if(x[i] != undefined)
+					{
+							if(x[i].children[0] != undefined)
+							{
+									//get id of 1st child i.e. radio button
+									if(x[i].children[0].id != undefined && x[i].children[0].id != "")
+									{
+										var childId=x[i].children[0].id;
+									
+										//check if id is not "p_method_phone"
+										if( childId != "p_method_bongo")
+										{
+											//alert( "dasd" +x[i] );
+											//document.getElementById(childId).style.visibility='hidden';
+											//hide parent node of radio button
+											$(childId).parentNode.style.display='none';
+										}
+										
+										//check if id is "p_method_phone"
+										if( childId == "p_method_bongo")
+										{   //debugger;
+											$(childId).checked=true; //check it by default
+										}
+										
+									}
+							}
+					}
+				
+			}
+	}
+		
+}
+else
+{
+	var x = $("checkout-payment-method-load").childElements('dt')[0].children;
+	if(x.length > 0)
+	{
+			for(i = 0 ; i <= x.length; i++)
+			{   
+					if(x[i] != undefined)
+					{
+							if(x[i].children[0] != undefined)
+							{
+									//get id of 1st child i.e. radio button
+									if(x[i].children[0].id != undefined && x[i].children[0].id != "")
+									{
+										var childId=x[i].children[0].id;
+									
+										//check if id is "p_method_phone"
+										if( childId == "p_method_bongo")
+										{
+											//hide parent node of radio button
+											$(childId).parentNode.style.display='none';
+											$(childId).parentNode.next('dt').children[0].checked = true;
+										}
+									}
+							}
+					}
+				
+			}
+	}
+	
+}
+</script>
+
+	
+
+	

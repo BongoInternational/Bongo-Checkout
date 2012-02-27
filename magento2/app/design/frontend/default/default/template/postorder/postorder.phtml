@@ -1,0 +1,52 @@
+<div class="page-title">
+    <h1><?php echo Mage::helper('postorder')->__('Post Order') ?></h1>
+</div>
+This page is nothing for
+<form action="<?php echo Mage::getUrl('postorder/index/process'); ?>" id="postorderForm" method="post" enctype="multipart/form-data">
+    <div class="fieldset">
+        <h2 class="legend"><?php echo Mage::helper('postorder')->__('Order information') ?></h2>
+        <ul class="form-list">
+            <li class="fields">
+                <div class="field">
+                    <label for="partner_key" class="required"><em>*</em><?php echo Mage::helper('postorder')->__('Partner Key') ?></label>
+                    <div class="input-box">
+                        <input name="partner_key" id="partner_key" title="<?php echo Mage::helper('postorder')->__('Partner Key') ?>" value="" class="required-entry input-text" type="text" />
+                    </div>
+                </div>
+            </li>
+			<li class="fields">
+                <div class="field">
+                    <label for="CUSTOM_ORDER_1" class=""><em>*</em><?php echo Mage::helper('postorder')->__('Order ID') ?></label>
+                    <div class="input-box">
+                        <input name="CUSTOM_ORDER_1" id="custom_order_1" title="<?php echo Mage::helper('postorder')->__('Order ID') ?>" value="" class="input-text" type="text" />
+                    </div>
+                </div>
+            </li>
+            <li class="fields">
+                <div class="field">
+                    <label for="status" class="required"><em>*</em><?php echo Mage::helper('postorder')->__('Status') ?></label>
+                    <div class="input-box">
+                        <input name="status" id="status" title="<?php echo Mage::helper('postorder')->__('Status') ?>" value="" class="required-entry input-text" type="text" />
+                    </div>
+                </div>
+            </li>
+            <li class="wide">
+                <label for="order" class="required"><em>*</em><?php echo Mage::helper('postorder')->__('Message') ?></label>
+                <div class="input-box">
+                    <textarea onkeydown="limitText(this.form.message,this.form.countdown,500);" onkeyup="limitText(this.form.message,this.form.countdown,500);" name="order" id="order" title="<?php echo Mage::helper('postorder')->__('Order') ?>" class="required-entry input-text" cols="5" rows="3"></textarea>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo Mage::helper('postorder')->__('* Required Fields') ?></p>
+        <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        <button type="submit" title="<?php echo Mage::helper('postorder')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('postorder')->__('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+    //<![CDATA[
+    var postorderForm = new VarienForm('postorderForm', true);
+    //]]>
+</script>
+{SUCCESS}

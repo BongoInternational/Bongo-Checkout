@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bongo_Postorder>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Bongo_Postorder>
+    </modules>
+</config> 

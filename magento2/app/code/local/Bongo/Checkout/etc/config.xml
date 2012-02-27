@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Bongo_Checkout>
+            <version>1.0.0</version>
+        </Bongo_Checkout>
+    </modules>
+	<global>
+        <helpers>
+            <bongo_checkout>
+                <class>Bongo_Checkout_Helper</class>
+            </bongo_checkout>
+        </helpers>
+        <models>
+            <bongo_checkout>
+                <class>Bongo_Checkout_Model</class>
+            </bongo_checkout>
+        </models>
+        <blocks>
+            <bongo_checkout>
+                <class>Bongo_Checkout_Block</class>
+            </bongo_checkout>
+        </blocks>
+	</global>
+    <default>
+        <payment>
+            <bongo>
+                <active>1</active>
+                <model>bongo_checkout/method_bongo</model>
+                <order_status>pending</order_status>
+                <title>Pay using Bongo International Checkout on the following page.</title>
+                <allowspecific>0</allowspecific>
+                <group>offline</group>
+            </bongo>
+         </payment>
+    </default>
+</config>
+
+
+

@@ -1,0 +1,75 @@
+<!--bongous:start-->
+
+<?php
+
+function getPerItemShippingCost($items, $shipping_cost) {
+
+	$n_items = 0;
+	foreach ($items as $item) { $n_items += $item->getQty(); }
+	$per_item_shipping = $shipping_cost / $n_items;
+	
+	return $per_item_shipping;
+}
+
+	$bill = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
+	$ship = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
+	$partner_key = $this->getMethod('bongo')->getPartnerKey();
+	$checkout_url = $this->getMethod('bongo')->getCheckoutURL();
+?>
+	
+		<form action="<? echo $checkout_url; ?>" method="post" id="frmBongo" name="frmBongo" style="display:none;">
+	
+			<input type="hidden" name="PARTNER_KEY" value="<? echo $partner_key; ?>" />
+			<input type="hidden" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME" value="<? echo $bill->getFirstname();  ?>" />
+			<input type="hidden" name="CUST_LAST_NAME" id="CUST_LAST_NAME" value="<? echo $bill->getLastname(); ?>" /> 
+			<input type="hidden" name="CUST_COMPANY" id="CUST_COMPANY" value="<? echo $bill->getCompany(); ?>" /> 
+			<input type="hidden" name="CUST_COUNTRY" id="CUST_COUNTRY" value="<? echo $bill->getCountry(); ?>" /> 
+			<input type="hidden" name="CUST_ADDRESS_LINE_1" id="CUST_ADDRESS_LINE_1" value="<? echo $bill->getStreet(1); ?>" /> 
+			<input type="hidden" name="CUST_ADDRESS_LINE_2" id="CUST_ADDRESS_LINE_2" value="<? echo $bill->getStreet(2); ?>" /> 
+			<input type="hidden" name="CUST_CITY" id="CUST_CITY" value="<? echo $bill->getCity(); ?>" />   
+			<input type="hidden" name="CUST_STATE" id="CUST_STATE" value="<? echo ($bill->getRegionCode() ? $bill->getRegionCode() : $bill->getRegion()); ?>" />
+			<input type="hidden" name="CUST_ZIP" id="CUST_ZIP" value="<? echo $bill->getPostcode(); ?>" />   
+			<input type="hidden" name="CUST_PHONE" id="CUST_PHONE" value="<? echo $bill->getTelephone(); ?>" /> 
+			<input type="hidden" name="CUST_EMAIL" id="CUST_EMAIL" value="<? echo $bill->getEmail(); ?>" /> 
+
+<?
+
+			/*$customer = Mage::getSingleton('customer/session')->getCustomer();
+			$email = $customer->getEmail();
+			echo "email". $email;
+			$firstname = $customer->getFirstname();
+			$lastname= $customer->getLastname();*/
+			
+			$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+			$a = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
+			$per_item_shipping = getPerItemShippingCost($items, $a->getShippingAmount());
+			
+			
+			//$b = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
+			//$a = $this->getQuote()->getShippingAddress();
+			$iCount = 1;
+		
+			//echo "firstna: ". $b->getFirstname();
+			foreach($items as $item) {
+				echo '<input type="hidden" name="PRODUCT_ID_'.$iCount .'"  value="'.$item->getSku() .'"/>';
+				//echo '<input type="hidden" name="PRODUCT_ID_'.$iCount .'"  value="'.$item->getProductId() .'"/>';
+				echo '<input type="hidden" name="PRODUCT_NAME_'.$iCount .'"  value="'.$item->getName() .'"/>';
+				echo '<input type="hidden" name="PRODUCT_PRICE_'.$iCount .'"  value="'.$item->getPrice() .'"/>';
+				echo '<input type="hidden" name="PRODUCT_Q_'.$iCount .'"  value="'.$item->getQty() .'"/>';
+				echo '<input type="hidden" name="PRODUCT_SHIPPING_'.$iCount .'"  value="'.$per_item_shipping.'"/>';
+				
+				$iCount ++;
+			}
+	
+			$orderId = $this->getOrderId();
+			$orderId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+			echo '<input type="hidden" id="txtOrderId" name="txtOrderId" value="'.$orderId.'"/>';
+	
+?>
+
+   			<!--<input name="SUB" id="btnSubmitBongous" type="submit" value="SUBMIT ORDER"  border='0'>-->
+	
+		</form>
+
+<p><?php echo $this->getMethod()->getTitle() ?></p>
+
