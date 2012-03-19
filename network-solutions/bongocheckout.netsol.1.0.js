@@ -8,9 +8,7 @@
 
 
 // Strip out HTML Tags
-String.prototype.stripHTML = function() {
-	return this.replace(/(<([^>]+)>)/ig,'');
-}
+String.prototype.stripHTML = function() { return this.replace(/(<([^>]+)>)/ig,''); }
 
 var $b = jQuery.noConflict();
 
@@ -47,7 +45,7 @@ var BongoCheckout = {
 			var price = $b('.cart-item-attributes',this).parent().next('td').html().replace('$','').trim();
 			var q = $b('.cart-item-attributes',this).parent().next('td').next('td').html().trim();
 			
-			console.log(name,' >> ', sku, ' > Price: ', price, '  > Q: ', q);
+			//console.log(name,' >> ', sku, ' > Price: ', price, '  > Q: ', q);
 			
 			$b('form[name="BongoCheckoutForm"]').append('<input type="hidden" name="PRODUCT_ID_'+x+'" value="'+sku+'">');
 			$b('form[name="BongoCheckoutForm"]').append('<input type="hidden" name="PRODUCT_NAME_'+x+'" value="'+name+'">');
@@ -72,6 +70,4 @@ var BongoCheckout = {
 	},
 }
 
-$b(document).ready(function() {
-	BongoCheckout.Init();
-});
+$b(document).ready(function() { BongoCheckout.Init(); });
