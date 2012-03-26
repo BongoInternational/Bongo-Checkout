@@ -1,6 +1,6 @@
 /*		
 	Bongo Checkout for Volusion		
-	v2.2
+	v2.2.1
 	
 	By Elijah Boston (elijah.boston@bongous.com / elijahboston.com)	
 	
@@ -11,6 +11,10 @@
 	- jQuery 1.4.2 or newer
 	- A Partner Key and Checkout URL provided by Bongo International
 	
+	CHANGELOG:
+	---
+	2.2.1	- Fixed bug where product prices in the 1,000's were not being parsed correctly
+	
 */
 
 var jqb = jQuery.noConflict();
@@ -20,7 +24,7 @@ var jqb = jQuery.noConflict();
 */
 
 var BongoCheckout = {
-	partner_key: '0f72b255650a8ed68feffe3ab9e01774',
+	partner_key: 'YOUR_PARTNER_KEY',
 	message_abovebutton: '<b>International Customers</b>, please click the button below to continue to Checkout.',
 	message_abovebutton_border_color: '#b6b6b6',
 	message_abovebutton_bg_color: '#fff',
@@ -36,7 +40,7 @@ var BongoCheckout = {
 	Nothing below this line should be modified unless you are familiar with JavaScript!
 */
 
-	debug_mode: false, // Display messages in the browser console
+	debug_mode: true, // Display messages in the browser console
 	
 	cust_fname: '',
 	cust_lname: '',
@@ -100,9 +104,9 @@ var BongoCheckout = {
 	},
 
 	getItemNames: function() {
-		names = new Array();
-		elements = jqb('form[name="form"] td a[href!="ShoppingCart.asp?ClearCart=Y"]');
-		real_names = new Array();
+		var names = new Array();
+		var elements = jqb('form[name="form"] td a[href!="ShoppingCart.asp?ClearCart=Y"]');
+		var real_names = new Array();
 		
 		for (i=0;i < elements.length; i++) {
 			
@@ -120,8 +124,8 @@ var BongoCheckout = {
 	},
 
 	getItemQuantities: function() {
-		quantities = new Array();
-		elements = jqb('form[name="form"] td input[name^="Quantity"]');
+		var quantities = new Array();
+		var elements = jqb('form[name="form"] td input[name^="Quantity"]');
 		
 		for (i=0; i < elements.length; i++) {
 			quantities[i] = elements[i].value;
@@ -131,14 +135,14 @@ var BongoCheckout = {
 	},
 
 	getItemPrices: function() {
-		price = '';
-		prices = new Array();
-		elements = jqb('form[name="form"] td div font:contains("$")').not(':odd');
+		var price = '';
+		var prices = new Array();
+		var elements = jqb('form[name="form"] td div font:contains("$")').not(':odd');
 		
 		for (i=0; i < elements.length; i++) {
 			
 			price = trim(elements[i].innerHTML);
-			prices[i] = price.substr(1);
+			prices[i] = price.substr(1).replace(",","");
 			if (this.debug) {  console.log('Price: ', prices[i]); }
 		}
 		
