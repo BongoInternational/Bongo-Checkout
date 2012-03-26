@@ -39,7 +39,13 @@ var BongoCheckout = {
 	
 	Init: function()
 	{
-		//BongoCheckout.InsertHTML();
+		// Check if we're using HTTPS
+		if (window.location.protocol != 'https:') {
+			// Reload using https if not
+			window.location.href = 'https://'+document.location.href.substr(6);
+			return;
+		}
+		
 		BongoCheckout.RenderForm();
 		BongoCheckout.InsertHTML();
 	},
