@@ -48,5 +48,4 @@ class Bongo_Checkout_Model_Method_Bongo extends Mage_Payment_Model_Method_Abstra
         return Mage::getStoreConfig('payment/phone/intl_phone_number');
     }*/
 }
-
 ?>

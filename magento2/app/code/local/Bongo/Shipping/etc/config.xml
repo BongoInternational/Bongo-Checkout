@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Bongo_Shipping>
+            <version>1.0.0</version>
+        </Bongo_Shipping>
+    </modules>
+	<global>
+        <models>
+            <bongo_shipping>
+                <class>Bongo_Shipping_Model</class>
+            </bongo_shipping>
+        </models>
+	</global>
+</config>

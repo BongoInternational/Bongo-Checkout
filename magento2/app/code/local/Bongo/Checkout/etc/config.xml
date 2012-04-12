@@ -35,6 +35,19 @@
             </bongo>
          </payment>
     </default>
+    <crontab>
+        <jobs>
+            <order_cancel_orders>
+                <schedule>
+                    <cron_expr>*/10 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>bongo_checkout/observer::cancelPendingCashOrders</model>
+                </run>
+            </order_cancel_orders>
+        </jobs>
+    </crontab>
+    
 </config>
 
 
