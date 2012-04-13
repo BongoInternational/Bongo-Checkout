@@ -176,7 +176,7 @@ var BongoCheckout = {
 	
 	GetProduct: function(pid, item_n) {
 	
-		var auth = Base64.encode(BongoCheckout.api_token + ':' + BongoCheckout.api_username);
+		var auth = Base64.encode(BongoCheckout.api_username + ':' + BongoCheckout.api_token);
 		
 		var resp = $.ajax({
 			dataType: 'json',
