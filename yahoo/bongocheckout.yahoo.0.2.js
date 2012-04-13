@@ -4,7 +4,9 @@
 // Written by Elijah Boston
 // elijah.boston@bongous.com
 
-// Version 1.0
+// Version 0.2
+
+var STORE_DOMAIN = 'http://store.yahoo.com';
 
 // Add .startsWith function to String prototype
 String.prototype.startsWith = function(str){
@@ -18,6 +20,7 @@ String.prototype.stripHTML = function() {
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,""); 
 }
+
 
 function getCustomerInfo() {
 	var custInfo = new Array();
@@ -69,7 +72,13 @@ function extractItemInfo(current_item) {
 	var price = $(current_item).parent().parent().parent().parent().children('.ys_unitPrice').html();
 	var quant_parent = $(current_item).parent().parent().parent().parent().children('.ys_quantity');
 	var quant = $(quant_parent).children('label').children('input').val();
-	var custom = $(current_item).parent().parent().parent().parent().children('.ys_options').html().replace('</li>',' -- ').stripHTML().trim();
+	var custom = $(current_item).parent().parent().parent().parent().children('.ys_options').html();
+	
+	if (custom != null) { 
+		custom = custom.replace('</li>',' -- ').stripHTML().trim(); 
+	} else {
+		custom = '';
+	}
 	
 	//console.log('Custom: ', custom);
 
@@ -91,7 +100,7 @@ function getCart() {
 		
 		itemInfo_url = $(this).attr('href');
 
-		if (itemInfo_url.startsWith('http://store.yahoo.com')) {
+		if (itemInfo_url.startsWith(STORE_DOMAIN)) {
 			itemInfo = extractItemInfo(this);
             cart[i] = itemInfo;
             i = i + 1;

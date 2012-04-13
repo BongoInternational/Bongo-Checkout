@@ -182,7 +182,7 @@ var BongoCheckout = {
 		$('td.CartItemIndividualPrice').each(function()
 		{
 			var ptmp = BongoCheckout.trim( $(this).html() );
-			prices[i] = ptmp.substr(1, $(this).html().length);
+			prices[i] = ptmp.substr(1, $(this).html().length).replace(',','');
 			//console.log('Price: ' + prices[i]);
 			i++;
 		});

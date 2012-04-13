@@ -1,38 +1,20 @@
-----------------------------------------------------------------
-Bongo Checkout for BigCommerce
-----------------------------------------------------------------
-Developed by Elijah Boston
-elijah.boston@bongous.com
-----------------------------------------------------------------
-Copyright 2011 Bongo International, LLC
+﻿Big Commerce Implementation Guide v0.4
+Installation
+1. Within your Big Commerce administration area, navigate to Users and select to Edit your account.
+2. At the bottom of the account edit page, check the box labelled ‘Enable the API?’
+3. Copy the API Token and save this for later.
+4. Open bongocheckout.0.4.js in a text editor, and replace the following information, starting at line 31:
+1. partnerKey = The Bongo partner key provided by your implementation specialist or obtained from your Bongo Partner Portal.
+2. api_token = The API Token copied in step 3.
+3. api_username = The username you use when logging into the administration area of Big Commerce (i.e. ‘admin’).
 
-THIS CODE MAY NOT BE REDISTRIBUTED OR MODIFIED BY ANYONE
-OTHER THAN PARTNERS LISCENSED BY BONGO INTERNATIONAL LLC.
-----------------------------------------------------------------
 
-====
-INSTALLATION
-====
+5. Upload bongocheckout.0.4.js to your Big Commerce content folder, via FTP.
+6. Go to Design > Template Files > cart.html .Insert the code below BEFORE the closing div (MAKE SURE TO REPLACE "CHECKOUT URL" with the one we give you!)
+        
+                <form name="BongoCheckoutForm" method="post" action="CHECKOUT_URL"></form>
+                <script type="text/javascript" src="content/bongocheckout.0.4.js"></script>
+                <script type="text/javascript">BongoCheckout.Init();</script>
 
-1. Open bongocheckout.0.4.js in a text editor, and replace line 30 where it says YOUR_PARTNER_KEY with the partner key given to you, or obtained through your partner portal.
 
-2. Upload bongocheckout.0.4.js to your content folder.
-
-3. Go to Design > Template Files > cart.html .Insert the code below BEFORE the closing div (MAKE SURE TO REPLACE "CHECKOUT URL" with the one we give you!)
-	
-	
-		<form name="BongoCheckoutForm" method="post" action="CHECKOUT_URL"></form>
-		<script type="text/javascript" src="content/bongocheckout.0.4.js"></script>
-		<script type="text/javascript">BongoCheckout.Init();</script>
-
-===
-OPTIONS
-===
-
-partnerKey - The unique identifier key assigned to your account.
-
-prompt - The message displayed above the button.
-
-image_url - URL of the image to use for the button
-
-debug - This can be left turned off. If you experience technical issues, our implementation specialist may ask you to set this to 'true' so they can better analyze the problem.
+Below: Proper placement of the Bongo Checkout code snippet in the cart.html file.

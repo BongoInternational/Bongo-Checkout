@@ -1,7 +1,7 @@
 <?php
 
 
-class Bongo_Checkout_Block_Info_Bongo extends Mage_Payment_Block_Info
+class Bongo_Checkout_Block_Info_Bongo extends Mage_Checkout_Block_Onepage_Billing
 {
 
    /* protected $_phoneNumber;
