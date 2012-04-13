@@ -1,7 +1,7 @@
 <!--bongous:start-->
 
 <?php
-/*
+
 function getPerItemShippingCost($items, $shipping_cost) {
 
 	$n_items = 0;
@@ -10,13 +10,16 @@ function getPerItemShippingCost($items, $shipping_cost) {
 	
 	return $per_item_shipping;
 }
-*/
-	$bill = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
-	//$ship = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
-	$partner_key = $this->getMethod('bongo')->getPartnerKey();
-	$checkout_url = $this->getMethod('bongo')->getCheckoutURL();
+
+	$bongo = Mage::getModel('bongo_shipping/shipping');
 	$domestic_shipping = $bongo->getBongoDomesticShipping();
 	$bongo_domestic_shipping = 0;
+
+	$bill = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
+	$ship = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
+	$partner_key = $this->getMethod('bongo')->getPartnerKey();
+	$checkout_url = $this->getMethod('bongo')->getCheckoutURL();
+	
 	
 ?>
 	
@@ -44,29 +47,22 @@ function getPerItemShippingCost($items, $shipping_cost) {
 			$lastname= $customer->getLastname();*/
 			
 			$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
-			//$a = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
-			//$per_item_shipping = getPerItemShippingCost($items, $a->getShippingAmount());
+			$a = Mage::getModel('checkout/cart')->getQuote()->getShippingAddress();
+			$per_item_shipping = getPerItemShippingCost($items, $a->getShippingAmount());
 			
 			
 			//$b = Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
 			//$a = $this->getQuote()->getShippingAddress();
 			$iCount = 1;
-			$total_items = 0;
-			
-			foreach($items as $item) { $total_items += $item->getQty(); }
-			
-			$bongo_domestic_shipping = $domestic_shipping / $total_items;
-			
+		
 			//echo "firstna: ". $b->getFirstname();
 			foreach($items as $item) {
-			
-				//print_r($item);
 				echo '<input type="hidden" name="PRODUCT_ID_'.$iCount .'"  value="'.$item->getSku() .'"/>';
 				//echo '<input type="hidden" name="PRODUCT_ID_'.$iCount .'"  value="'.$item->getProductId() .'"/>';
 				echo '<input type="hidden" name="PRODUCT_NAME_'.$iCount .'"  value="'.$item->getName() .'"/>';
 				echo '<input type="hidden" name="PRODUCT_PRICE_'.$iCount .'"  value="'.$item->getPrice() .'"/>';
 				echo '<input type="hidden" name="PRODUCT_Q_'.$iCount .'"  value="'.$item->getQty() .'"/>';
-				echo '<input type="hidden" name="PRODUCT_SHIPPING_'.$iCount .'"  value="'.$bongo_domestic_shipping.'"/>';
+				echo '<input type="hidden" name="PRODUCT_SHIPPING_'.$iCount .'"  value="'.$per_item_shipping.'"/>';
 				
 				$iCount ++;
 			}
@@ -77,7 +73,7 @@ function getPerItemShippingCost($items, $shipping_cost) {
 			
 	
 ?>
-			<input type="hidden" name="CUSTOM_ORDER_1" id="CUSTOM_ORDER_1" value="<? echo $orderId+1; ?>" /> 
+			<input type="hidden" name="CUSTOMER_ORDER_1" id="CUSTOM_ORDER_1" value="<? echo $orderId; ?>" /> 
    			<!--<input name="SUB" id="btnSubmitBongous" type="submit" value="SUBMIT ORDER"  border='0'>-->
 	
 		</form>

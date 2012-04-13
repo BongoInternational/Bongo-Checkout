@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Bongo_Shipping>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Core/>
+                <Mage_Catalog/>
+            </depends>
+        </Bongo_Shipping>
+    </modules>
+</config> 
